@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 
@@ -8,8 +9,16 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+// credentials: true + explicit origin is required for cookies to work cross-origin -
+// app.use(cors()) alone (Day 1) does NOT allow cookies to be sent
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 

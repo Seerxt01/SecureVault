@@ -15,7 +15,7 @@ function Login({ onSwitchToRegister, onLoginSuccess }) {
     try {
       const res = await apiClient.post("/auth/login", form);
       setStatus({ message: res.data.message, isError: false });
-      onLoginSuccess(res.data.user);
+      onLoginSuccess(res.data.user, res.data.accessToken);
     } catch (err) {
       const msg = err.response?.data?.message || "Login failed";
       setStatus({ message: msg, isError: true });
