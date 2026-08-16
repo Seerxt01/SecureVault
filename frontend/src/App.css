@@ -1,0 +1,53 @@
+.app-shell {
+  max-width: 420px;
+  margin: 60px auto;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+.auth-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: left;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-card input {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.auth-card button {
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 0;
+}
+
+.error-text {
+  color: #dc2626;
+}
+
+.success-text {
+  color: #16a34a;
+}
+
+.note-text {
+  color: #6b7280;
+  font-size: 13px;
+}
