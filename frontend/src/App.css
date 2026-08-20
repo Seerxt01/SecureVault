@@ -51,3 +51,16 @@
   color: #6b7280;
   font-size: 13px;
 }
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
