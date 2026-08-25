@@ -2,6 +2,7 @@ const File = require("../models/File");
 const fs = require("fs");
 const path = require("path");
 const { encryptBuffer, decryptBuffer } = require("../utils/encryption");
+const logAction = require("../utils/logAction");
 
 const UPLOAD_DIR = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) {
@@ -34,6 +35,14 @@ const uploadFile = async (req, res) => {
       encryptionAuthTag: authTag.toString("hex"),
     });
 
+    await logAction({
+      action: "FILE_UPLOAD",
+      user: req.user.id,
+      username: req.user.username,
+      req,
+      details: newFile.originalName,
+    });
+
     return res.status(201).json({
       message: "File uploaded and encrypted successfully",
       file: {
@@ -63,7 +72,7 @@ const getMyFiles = async (req, res) => {
   }
 };
 
-// GET /api/files/:id/download - decrypts and streams the file back
+// GET /api/files/:id/download
 const downloadFile = async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
@@ -71,8 +80,14 @@ const downloadFile = async (req, res) => {
       return res.status(404).json({ message: "File not found" });
     }
 
-    // Owner OR admin - same layered check pattern as deleteFile below
     if (file.uploadedBy.toString() !== req.user.id && req.user.role !== "admin") {
+      await logAction({
+        action: "UNAUTHORIZED_ACCESS",
+        user: req.user.id,
+        username: req.user.username,
+        req,
+        details: `Attempted to access file ${file._id}`,
+      });
       return res.status(403).json({ message: "Not authorized to access this file" });
     }
 
@@ -87,11 +102,18 @@ const downloadFile = async (req, res) => {
 
     const decrypted = decryptBuffer(encryptedData, iv, authTag);
 
+    await logAction({
+      action: "FILE_DOWNLOAD",
+      user: req.user.id,
+      username: req.user.username,
+      req,
+      details: file.originalName,
+    });
+
     res.setHeader("Content-Type", file.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${file.originalName}"`);
     return res.send(decrypted);
   } catch (err) {
-    // A bad/tampered authTag throws here - decryption fails closed, not silently
     console.error("downloadFile error:", err.message);
     return res.status(500).json({ message: "Server error during file download" });
   }
@@ -105,7 +127,6 @@ const deleteFile = async (req, res) => {
       return res.status(404).json({ message: "File not found" });
     }
 
-    // Day 5 update: owner OR admin can delete (was owner-only in Day 3)
     if (file.uploadedBy.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ message: "Not authorized to delete this file" });
     }
@@ -116,6 +137,15 @@ const deleteFile = async (req, res) => {
     }
 
     await file.deleteOne();
+
+    await logAction({
+      action: "FILE_DELETE",
+      user: req.user.id,
+      username: req.user.username,
+      req,
+      details: file.originalName,
+    });
+
     return res.status(200).json({ message: "File deleted successfully" });
   } catch (err) {
     console.error("deleteFile error:", err.message);

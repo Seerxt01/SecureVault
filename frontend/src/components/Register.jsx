@@ -28,6 +28,7 @@ function Register({ onSwitchToLogin }) {
       <form onSubmit={handleSubmit}>
         <input
           name="username"
+          type="text"
           placeholder="Username"
           value={form.username}
           onChange={handleChange}

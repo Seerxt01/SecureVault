@@ -4,12 +4,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const fileRoutes = require("./routes/fileRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
-
 connectDB();
-const adminRoutes = require("./routes/adminRoutes");
-app.use("/api/admin", adminRoutes);
 
 // credentials: true + explicit origin is required for cookies to work cross-origin -
 // app.use(cors()) alone (Day 1) does NOT allow cookies to be sent
@@ -23,6 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/files", fileRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

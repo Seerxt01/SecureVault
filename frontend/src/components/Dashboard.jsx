@@ -34,18 +34,33 @@ function Dashboard({ user, accessToken, onLogout }) {
       <div className="auth-card">
         <h2>Welcome, {user.username}</h2>
         {error && <p className="error-text">{error}</p>}
+
         {meData && (
-          <div className="note-text">
-            <p>Verified via protected route /api/auth/me:</p>
-            <p>ID: {meData._id}</p>
-            <p>Email: {meData.email}</p>
-            <p>Role: {meData.role}</p>
-          </div>
+          <>
+            <p className="note-text" style={{ margin: "14px 0 16px" }}>
+              Verified via protected route <span className="mono">/api/auth/me</span>
+            </p>
+            <div className="session-row">
+              <span className="session-label">User ID</span>
+              <span className="session-value">{meData._id}</span>
+            </div>
+            <div className="session-row">
+              <span className="session-label">Email</span>
+              <span className="session-value">{meData.email}</span>
+            </div>
+            <div className="session-row">
+              <span className="session-label">Role</span>
+              <span className="role-badge">● {meData.role}</span>
+            </div>
+          </>
         )}
-        <p className="note-text">
-          Day 4 adds AES encryption/decryption for uploaded files.
+
+        <p className="note-text" style={{ marginTop: "16px" }}>
+          Files are encrypted at rest using AES-256-GCM.
         </p>
-        <button onClick={handleLogout}>Log Out</button>
+        <button className="ghost" style={{ marginTop: "18px" }} onClick={handleLogout}>
+          Log Out
+        </button>
       </div>
 
       <div style={{ marginTop: "16px" }}>

@@ -68,6 +68,26 @@ function FileUpload({ accessToken }) {
       setStatus({ message: "Could not delete file", isError: true });
     }
   };
+  const handleDownload = async (fileId, originalName) => {
+  try {
+    const res = await apiClient.get(`/files/${fileId}/download`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: "blob", // needed - the response is raw file bytes, not JSON
+    });
+
+    // Create a temporary link to trigger the browser's normal "save file" behavior
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", originalName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    setStatus({ message: "Could not download file", isError: true });
+  }
+};
 
   const formatSize = (bytes) => {
     if (bytes < 1024) return `${bytes} B`;
@@ -92,12 +112,18 @@ function FileUpload({ accessToken }) {
         {files.length === 0 && <li className="note-text">No files uploaded yet.</li>}
         {files.map((f) => (
           <li key={f._id}>
-            <span>{f.originalName}</span>
-            <span className="note-text"> ({formatSize(f.size)})</span>
-            <button className="link-btn" onClick={() => handleDelete(f._id)}>
-              Delete
-            </button>
-          </li>
+  <span className="lock-dot"></span>
+  <span className="file-name">{f.originalName}</span>
+  <span className="file-meta">({formatSize(f.size)})</span>
+  <div className="file-actions">
+    <button className="link-btn" onClick={() => handleDownload(f._id, f.originalName)}>
+      Download
+    </button>
+    <button className="link-btn danger" onClick={() => handleDelete(f._id)}>
+      Delete
+    </button>
+  </div>
+</li>
         ))}
       </ul>
     </div>
