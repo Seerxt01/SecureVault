@@ -9,10 +9,16 @@ const {
 } = require("../controllers/authController");
 const { protect } = require("../middleware/authMiddleware");
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+const { loginLimiter, registerLimiter } = require("../middleware/rateLimiter");
+const { validate, registerValidationRules, loginValidationRules } = require("../middleware/validators");
+
+router.post("/register", registerLimiter, registerValidationRules, validate, registerUser);
+router.post("/login", loginLimiter, loginValidationRules, validate, loginUser);
 router.post("/refresh", refreshAccessToken);
 router.post("/logout", logoutUser);
 router.get("/me", protect, getMe); // protect middleware runs first - blocks the request if the token is missing/invalid
 
 module.exports = router;
+
+
+// Replace your existing register/login lines with:

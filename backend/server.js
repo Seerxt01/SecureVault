@@ -8,6 +8,8 @@ const authRoutes = require("./routes/authRoutes");
 const app = express();
 
 connectDB();
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/api/admin", adminRoutes);
 
 // credentials: true + explicit origin is required for cookies to work cross-origin -
 // app.use(cors()) alone (Day 1) does NOT allow cookies to be sent
