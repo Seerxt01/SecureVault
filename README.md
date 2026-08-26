@@ -112,5 +112,10 @@ Documented deliberately — a realistic project has tradeoffs, and naming them s
 ---
 
 ## Screenshots
+<img width="1902" height="881" alt="login image" src="https://github.com/user-attachments/assets/db4fd94f-0fc0-4082-b2d1-92b8af2f7f18" />
+<img width="1891" height="902" alt="register image" src="https://github.com/user-attachments/assets/1593edab-40c8-43d8-8b53-2db0f8f6bf79" />
+<img width="1870" height="901" alt="dashboard image" src="https://github.com/user-attachments/assets/930b2498-1a16-40c3-8b07-29dae6cadcbc" />
+<img width="1873" height="901" alt="file upload image" src="https://github.com/user-attachments/assets/ac1a9381-133a-42b6-beda-c390b0bd0a73" />
 
-*(add screenshots of login, dashboard, file upload, and admin log view here)*
+
+
